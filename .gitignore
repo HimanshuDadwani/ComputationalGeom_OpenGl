@@ -1,0 +1,58 @@
+*.v*
+*.zip
+vendor/
+scripts/
+*.dll
+*.lib
+*.pdb
+
+
+# Visual Studio user settings and caches
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output directories
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Oo]bj/
+bld/
+out/
+
+# Intermediate compilation and linker files
+*.obj
+*.o
+*.pch
+*.pdb
+*.idb
+*.iobj
+*.ipdb
+*.ilk
+*.exp
+*.tlog
+*.lastbuildstate
+*.recipe
+
+# Generated binaries
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+
+# Other generated files
+*.log
+*.cache
+ipch/
+Generated Files/

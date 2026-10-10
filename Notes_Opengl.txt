@@ -1,0 +1,112 @@
+opengl is a state machine, we set the states first and then call draw method
+and the state already contains what is to be drawn
+
+how to draw?
+it's all around vertices
+we need to create vertices, then we can draw follwing things
+points on these vertices
+lines using these vertices
+triangles using these vertices
+these are called primitives
+check OpenGLPrimitive.png
+
+how to create vertices?
+
+using buffer object, which is just a buffer, i.e. a block of memory
+glGenBuffer(1,&id)
+every object in openGL has a id
+
+and then assign this buffer to vertex array - GL_ARRAY_BUFFER - which is a state object in open gl
+glBindBuffer(GL_ARRAY_BUFFER, id);
+
+
+once it is bound to GL_ARRAY_BUFFER, now we can set the data (vertices data in the buffer (with I.D. - id) because it is currently bound to GL_ARRAY_BUFFER
+	float vertex[3] = { Pt.x, Pt.y, 0 };
+glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 , vertex, GL_STATIC_DRAW);
+check documentation of API for understanding the arguments
+
+done, now open gl has the vertices data, but it is just a block of memory,
+we need to explain the layout of the memory,
+usually vertex will contain more info other than position, like, normal, colour, tangent etc.
+these are called attributes of the vertices
+
+so we need to specify the attributes of a vertex, using a 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+0 is the index of this attribute
+it contains 3 floats
+then we don't want it to be automatically be normalized i.e. converted to normalized screen coordinated - so GL_FALSE
+then size of a vertex in bytes,	
+then any offset ?? check documentation, number of byesfrom first attribute which is at 0th byte location
+say vertex has first arrtibute as position i.e. 3 floats and second attribute as colour
+so offset for first attribute is 0 (always)
+and offset for second attribute is 3*sizeof(floats)
+
+then we need to enable this attribute as well
+
+now say we want to create a square, we don't have a square primitives
+max we have triangle
+so we make 2 triangles
+if we make 2 triangles, we need 6 vertices?
+or 4?
+
+to draw a triangle we use
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		
+we had 3 vertices and we want to draw a triangle, we say draw a triangle, 0 is offset or starting index, idk, check documentation
+then we specify no. of vertices as multiple of 3 so 3 or 6 or ...
+
+so for 2 trianlges we need 6 vertices in the buffer
+and for bigger model, there will be many duplicate vertices using this way
+
+so, other way is to use element buffer or index buffer object
+created in simillar way
+glgenBuffers(1,&id_2)
+
+then bound to index/element buffer object
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_2);
+
+then data set to it as
+int indeices [6]= { 0,1,2,2,3,0}
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 6 , indices, GL_STATIC_DRAW);
+
+indices are the indices of the vertex to be used when generating the triangle
+using method
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);	this will draw 6/3 = 2 triangles first using vertices indexed 0,1,2 and second triangled using vertices indexed 2,3,0
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, nullptr);		this will draw 6/2 = 3 lines first with vertices indexed 0,1 then second with vertices indexed 2,2(so this will throw error maybe), then thrid with vertices indexed 3,0
+	glDrawElements(GL_POINTS, 6, GL_UNSIGNED_INT, nullptr);		this will draw 6/1 = 6 points, at each index so index 2 and 0 is repeated so basically you'll see 4 points only
+	
+now all this information is to be specified for the vertices stored in the buffer
+since it is just buffer
+we need to define the layout or what with attributes is the vertex made of
+then we need to define how we want to draw it (if we want to have unique vertices data) using index buffer
+
+if I draw an object (say square) with all this
+then I want to create another shape, then again I specify all this for that shape
+
+in next frame, screen is cleared, I need to draw everything again
+even if the vertex data is not changed for this, so I use same vertices as before
+I still need to do all the stuff, bind particular buffer, specify it's layout, specify how to draw with indices and draw
+and again for other shape, bind it's buffer, specify it's layout, specify how to draw that, may be as lines or points or trianlges etc
+
+
+there is another object call vertex array object, which once bound, will store all this information of buffer object and it's layout
+and then we don't need to specify this again and again, we just need to bind this object before we draw
+
+
+
+
+
+
+
+
+then coomes shaders, which are programs that we want to run on GPU, because such operations  are faster on GPU
+even with no operation, we need at least vertex shader- to spcify the position of the vertex, 
+which could be what you defined or which might need transformation so that it can come in screen coordinates which are -1 to 1 in both x and y (also there could be a camera or point of view which tranform the objects)
+ and fragemet shader to specify colour of each fragement/pixel, which might need to be calculated based on material type, lighting and positioin of light
+
+uniforms are objects using with we can send data from application to shader or GPU
+say camera position/lighting information, which will then be used in say fragement shader to calculate colors for each pixels
+
+
+
