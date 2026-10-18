@@ -14,3 +14,11 @@ Closest Point on Curve: Using Newton Solver
 
 https://github.com/user-attachments/assets/8e8e232f-d88c-4492-bc25-d47c5dc8cff8
 
+Future scope:
+Refactor to modularize and organize the sub projects
+Curve fitting
+Curve fairing
+Composite Bezier Curve
+Bezier Surfaces
+Surface-Surface intersection
+and more
